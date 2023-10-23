@@ -1,5 +1,7 @@
 import 'package:forestvpn_test/repositories/news/repository.dart';
+import 'package:injectable/injectable.dart';
 
+@Singleton(as: AbstractNewsRepository)
 class MockNewsRepository implements AbstractNewsRepository {
   @override
   Future<List<Article>> getLatestArticles() async {

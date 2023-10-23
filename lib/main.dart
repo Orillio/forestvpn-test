@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:forestvpn_test/di/get_it.dart';
+
+import 'auto_route/app_router.dart';
 
 void main() {
+  configureDependencies();
   runApp(const ForestVPNTestApp());
 }
 
@@ -9,13 +13,9 @@ class ForestVPNTestApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp.router(
       title: 'ForestVPN test',
-      home: Scaffold(
-        body: Center(
-          child: Text('News screen'),
-        ),
-      ),
+      routerConfig: getIt.get<AppRouter>().config(),
     );
   }
 }

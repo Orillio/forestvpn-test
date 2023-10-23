@@ -1,2 +1,3 @@
-export 'article_page.dart';
-export 'news_page.dart';
+export 'article/article_page.dart';
+export 'news/news.dart';
+export 'article/article.dart';

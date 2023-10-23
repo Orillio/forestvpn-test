@@ -11,7 +11,6 @@
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
-import '../auto_route/app_router.dart' as _i5;
 import '../repositories/news/mock_news_repository.dart' as _i4;
 import '../repositories/news/repository.dart' as _i3;
 
@@ -27,7 +26,6 @@ extension GetItInjectableX on _i1.GetIt {
       environmentFilter,
     );
     gh.singleton<_i3.AbstractNewsRepository>(_i4.MockNewsRepository());
-    gh.singleton<_i5.AppRouter>(_i5.AppRouter());
     return this;
   }
 }

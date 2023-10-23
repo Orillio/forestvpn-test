@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:forestvpn_test/bloc/news_bloc.dart';
 import 'package:forestvpn_test/di/get_it.dart';
-
-import 'auto_route/app_router.dart';
+import 'package:forestvpn_test/page/news/news_page.dart';
 
 void main() {
   configureDependencies();
@@ -13,9 +14,12 @@ class ForestVPNTestApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'ForestVPN test',
-      routerConfig: getIt.get<AppRouter>().config(),
+    return BlocProvider(
+      create: (_) => NewsBloc(),
+      child: const MaterialApp(
+        title: 'ForestVPN test',
+        home: NewsPage(),
+      ),
     );
   }
 }

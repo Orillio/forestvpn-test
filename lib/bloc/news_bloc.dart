@@ -6,14 +6,14 @@ import '../repositories/news/repository.dart';
 
 part 'news_bloc.freezed.dart';
 
-class NewsState {
-  final List<Article> featuredArticles;
-  final List<Article> latestArticles;
+@freezed
+class NewsState with _$NewsState {
+  factory NewsState.initial() = _Initial;
 
-  NewsState({
-    required this.featuredArticles,
-    required this.latestArticles,
-  });
+  factory NewsState.fetched({
+    required List<Article> featuredArticles,
+    required List<Article> latestArticles,
+  }) = _Fetched;
 }
 
 @freezed
@@ -24,11 +24,7 @@ class NewsEvent with _$NewsEvent {
 }
 
 class NewsBloc extends Bloc<NewsEvent, NewsState> {
-  NewsBloc()
-      : super(NewsState(
-          featuredArticles: [],
-          latestArticles: [],
-        )) {
+  NewsBloc() : super(NewsState.initial()) {
     on<_FetchArticles>(_fetchArticles);
     on<_MarkRead>(_markRead);
     on<_MarkAllRead>(_markAllRead);
@@ -39,18 +35,43 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   late final AbstractNewsRepository _newsRepository;
 
   FutureOr<void> _fetchArticles(_FetchArticles event, Emitter emit) async {
-    emit(NewsState(
+    emit(NewsState.fetched(
       featuredArticles: await _newsRepository.getFeaturedArticles(),
       latestArticles: await _newsRepository.getLatestArticles(),
     ));
   }
 
   FutureOr<void> _markRead(_MarkRead event, Emitter emit) {
-    state.latestArticles.firstWhere(
+    _Fetched fetchedState = state as _Fetched;
+
+    int index = fetchedState.latestArticles.indexWhere(
       (e) => e.id == event.articleId,
     );
-    emit(state);
+
+    Article article = fetchedState.latestArticles[index];
+
+    emit(
+      fetchedState.copyWith(
+        featuredArticles: fetchedState.featuredArticles,
+        latestArticles: List.of(fetchedState.latestArticles)
+          ..removeAt(index)
+          ..insert(
+            index,
+            article.copyWith(readed: true),
+          ),
+      ),
+    );
   }
 
-  FutureOr<void> _markAllRead(_MarkAllRead event, Emitter emit) {}
+  FutureOr<void> _markAllRead(_MarkAllRead event, Emitter emit) {
+    _Fetched fetchedState = state as _Fetched;
+
+    emit(
+      fetchedState.copyWith(
+        featuredArticles: fetchedState.featuredArticles,
+        latestArticles:
+            fetchedState.latestArticles.map((e) => e.copyWith(readed: true)).toList(),
+      ),
+    );
+  }
 }

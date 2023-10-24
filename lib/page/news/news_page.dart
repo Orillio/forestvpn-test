@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forestvpn_test/bloc/news_bloc.dart';
 import 'package:forestvpn_test/page/news/widget/custom_app_bar.dart';
@@ -30,19 +31,22 @@ class _NewsPageState extends State<NewsPage> {
         );
       },
       fetched: (fetchedState) {
-        return Scaffold(
-          body: Column(
-            children: [
-              const CustomAppBar(),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Feed(
-                    featuredArticles: fetchedState.featuredArticles,
-                    latestArticles: fetchedState.latestArticles,
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.dark,
+          child: Scaffold(
+            body: Column(
+              children: [
+                const CustomAppBar(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Feed(
+                      featuredArticles: fetchedState.featuredArticles,
+                      latestArticles: fetchedState.latestArticles,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
